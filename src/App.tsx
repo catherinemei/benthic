@@ -12,6 +12,7 @@ const App: Component = () => {
       <a href="https://catherinemei.github.io/benthic-proto-two/">
         Go to Prototype 2 - Flat with Data Vis
       </a>
+      <br />
       <a href="https://catherinemei.github.io/benthic-proto-three/">
         Go to Prototype 1 - Parent Focus with Chemistry
       </a>
