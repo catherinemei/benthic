@@ -35,7 +35,7 @@ export function TraversalOutputComponentKeyboardFlat(
     );
 
   // Keeps track of traversal history for undo
-  const [history, setHistory] = createSignal<string[]>([]);
+  const [history, setHistory] = createSignal<string[]>(["0"]);
 
   const currentNode = createMemo(() => {
     if (currentNodeId() !== null) {
@@ -45,7 +45,7 @@ export function TraversalOutputComponentKeyboardFlat(
   });
 
   const handleNodeClick = (oldId: string, newId: string) => {
-    setHistory((prev) => [...prev, oldId]);
+    setHistory((prev) => [...prev, newId]);
     setCurrentNodeId(newId);
 
     // Moves screen reader focus
@@ -62,46 +62,13 @@ export function TraversalOutputComponentKeyboardFlat(
   };
 
   const handleKeyPress = (event: KeyboardEvent) => {
-    // if (event.key === "Shift") {
-    //   const handleArrowKey = (arrowEvent: KeyboardEvent) => {
-    //     if (arrowEvent.key === "ArrowUp") {
-    //       const parentSection = document.getElementById(`parents-group`);
-    //       if (parentSection) {
-    //         parentSection.focus();
-    //       }
-    //       arrowEvent.preventDefault();
-    //     } else if (arrowEvent.key === "ArrowDown") {
-    //       // Directly navigate to first child if children exist
-    //       // If not, then select entire group and announce that no children exist
-
-    //       const firstChildId = currentNode().children[0];
-
-    //       if (firstChildId) {
-    //         setCurrentNodeId(firstChildId);
-    //         const newSection = document.getElementById(`info-${firstChildId}`);
-    //         if (newSection) {
-    //           newSection.focus();
-    //         }
-    //       } else {
-    //         const childSection = document.getElementById(`children-group`);
-    //         if (childSection) {
-    //           childSection.focus();
-    //         }
-    //       }
-    //       arrowEvent.preventDefault();
-    //     }
-    //   };
-
-    //   window.addEventListener("keydown", handleArrowKey, { once: true });
-    // }
-
-    if (event.key === "u") {
+    if (event.key === "ArrowUp" && event.shiftKey) {
       const parentSection = document.getElementById(`parents-group`);
       if (parentSection) {
         parentSection.focus();
       }
       event.preventDefault();
-    } else if (event.key === "d") {
+    } else if (event.key === "ArrowDown" && event.shiftKey) {
       // Directly navigate to first child if children exist
       // If not, then select entire group and announce that no children exist
 
@@ -109,6 +76,8 @@ export function TraversalOutputComponentKeyboardFlat(
 
       if (firstChildId) {
         setCurrentNodeId(firstChildId);
+        setHistory((prev) => [...prev, firstChildId]);
+
         const newSection = document.getElementById(`info-${firstChildId}`);
         if (newSection) {
           newSection.focus();
@@ -120,13 +89,27 @@ export function TraversalOutputComponentKeyboardFlat(
         }
       }
       event.preventDefault();
-    } else if (event.key === "t") {
+    } else if (event.key === "h") {
       const titleSection = document.getElementById(`home`);
-      titleSection?.focus();
+
+      const lastNodeId = history()[history().length - 1];
+      const lastNodeButton = document.getElementById(`info-${lastNodeId}`);
+
+      if (lastNodeButton) {
+        lastNodeButton.focus();
+      } else {
+        titleSection?.focus();
+      }
     } else if (event.key === "Backspace") {
       setHistory((prev) => {
         const newHistory = [...prev];
-        const previousNodeId = newHistory.pop();
+
+        if (newHistory.length <= 1) {
+          return newHistory;
+        }
+
+        const currentNode = newHistory.pop();
+        const previousNodeId = newHistory[newHistory.length - 1];
 
         if (previousNodeId) {
           // used to announce undo action
@@ -155,10 +138,6 @@ export function TraversalOutputComponentKeyboardFlat(
     ) {
       const focusedElement = document.activeElement as HTMLElement;
       const focusedElementId = focusedElement?.id;
-      const focusableGroupIds = ["parents", "children"];
-      const currentGroupId = focusableGroupIds.find((groupId) =>
-        focusedElementId.startsWith(groupId)
-      );
 
       if (focusedElementId.startsWith("info-") || focusedElementId === "home") {
         const buttonsInGroup = Array.from(
@@ -183,12 +162,19 @@ export function TraversalOutputComponentKeyboardFlat(
         const newNodeId = buttonsInGroup[newIndex]?.id.split("info-")[1];
         if (newNodeId) {
           setCurrentNodeId(newNodeId);
+
+          setHistory((prev) => {
+            const newHistory = [...prev];
+            newHistory.pop();
+            newHistory.push(newNodeId);
+            return newHistory;
+          });
         }
         buttonsInGroup[newIndex]?.focus();
         event.preventDefault();
-      } else if (currentGroupId) {
+      } else if (focusedElementId.startsWith("parents")) {
         const buttonsInGroup = Array.from(
-          document.querySelectorAll(`#${currentGroupId}-group button`)
+          document.querySelectorAll(`#parents-group button`)
         ) as HTMLElement[];
         const currentIndex = buttonsInGroup.indexOf(focusedElement);
         if (
@@ -307,21 +293,9 @@ export function HypergraphNodeComponentKeyboardOnly(
     return adjacentNodes;
   });
 
-  const generateAriaLabel = createMemo(() => {
-    // collect name of all children nodes
-    const allChildren = sortedChildren();
-    const childrenNames = allChildren
-      .map((childNode) => childNode.descriptionTokens?.label)
-      .join(", ");
-
-    const nodeDescription =
-      childrenNames.length > 0 ? "contains " + childrenNames : "";
-    return `${props.node.displayName} node with ${props.node.parents.length} parent and ${props.node.children.length} children nodes; ${nodeDescription}`;
-  });
-
   return (
     <div style={{ padding: "20px" }}>
-      <div id={`home`} aria-label={generateAriaLabel()} tabindex="0">
+      <div id={`home`} tabindex="0">
         <For
           each={sortAdjacents()}
           fallback={
@@ -341,7 +315,7 @@ export function HypergraphNodeComponentKeyboardOnly(
               style={{ "margin-right": "5px" }}
               aria-label={`Node ${idx() + 1} of ${sortAdjacents().length}; ${
                 adjacent.displayName
-              }`}
+              }; ${adjacent.descriptionTokens?.longDescription}`}
               id={`info-${adjacent.id}`}
             >
               <span aria-hidden={true}>{adjacent.displayName}</span>

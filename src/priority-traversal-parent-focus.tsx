@@ -62,7 +62,7 @@ export function TraversalOutputComponentKeyboardParentFocus(
   };
 
   const handleKeyPress = (event: KeyboardEvent) => {
-    if (event.key === "u") {
+    if (event.key === "ArrowUp" && event.shiftKey) {
       // Navigate up through the parent focus using history
       const historyList = history();
       if (historyList.length > 2) {
@@ -110,7 +110,7 @@ export function TraversalOutputComponentKeyboardParentFocus(
         parentSection?.focus();
       }
       event.preventDefault();
-    } else if (event.key === "d") {
+    } else if (event.key === "ArrowDown" && event.shiftKey) {
       // Directly navigate to first child if children exist
       // If not, then select entire group and announce that no children exist
 
@@ -133,10 +133,18 @@ export function TraversalOutputComponentKeyboardParentFocus(
         }
       }
       event.preventDefault();
-    } else if (event.key === "t") {
+    } else if (event.key === "h") {
       const titleSection = document.getElementById(`home`);
-      titleSection?.focus();
-    } else if (event.key === "s") {
+
+      const lastNodeId = history()[history().length - 1];
+      const lastNodeButton = document.getElementById(`info-${lastNodeId}`);
+
+      if (lastNodeButton) {
+        lastNodeButton.focus();
+      } else {
+        titleSection?.focus();
+      }
+    } else if (event.key === "p") {
       const parents = props.nodeGraph[currentNodeId()!].parents;
       if (parents.length > 0) {
         // Get the current parent index from history, and cycle to the next parent
@@ -151,6 +159,7 @@ export function TraversalOutputComponentKeyboardParentFocus(
 
         const switchingFocus = document.getElementById("switch-focus");
         if (switchingFocus) {
+          switchingFocus.innerHTML = `Switching parent to ${props.nodeGraph[nextParentId].displayName}`;
           switchingFocus.focus();
         }
 
@@ -160,7 +169,7 @@ export function TraversalOutputComponentKeyboardParentFocus(
           if (curNodeSection) {
             curNodeSection.focus();
           }
-        }, 700);
+        }, 1400);
       }
       event.preventDefault();
     } else if (event.key === "Backspace") {
@@ -351,21 +360,9 @@ export function HypergraphNodeComponentKeyboardOnly(
     return adjacentNodes;
   });
 
-  const generateAriaLabel = createMemo(() => {
-    // collect name of all children nodes
-    const allChildren = sortedChildren();
-    const childrenNames = allChildren
-      .map((childNode) => childNode.descriptionTokens?.label)
-      .join(", ");
-
-    const nodeDescription =
-      childrenNames.length > 0 ? "contains " + childrenNames : "";
-    return `${props.node.displayName} node with ${props.node.parents.length} parent and ${props.node.children.length} children nodes; ${nodeDescription}`;
-  });
-
   return (
     <div style={{ padding: "20px" }}>
-      <div id={`home`} aria-label={generateAriaLabel()} tabindex="0">
+      <div id={`home`} tabindex="0">
         <For
           each={sortAdjacents()}
           fallback={
@@ -385,7 +382,7 @@ export function HypergraphNodeComponentKeyboardOnly(
               style={{ "margin-right": "5px" }}
               aria-label={`Node ${idx() + 1} of ${sortAdjacents().length}; ${
                 adjacent.displayName
-              }`}
+              }; ${adjacent.descriptionTokens?.longDescription}`}
               id={`info-${adjacent.id}`}
             >
               <span aria-hidden={true}>{adjacent.displayName}</span>
