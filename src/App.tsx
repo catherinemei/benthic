@@ -14,11 +14,11 @@ const App: Component = () => {
       </a>
       <br />
       <a href="https://catherinemei.github.io/benthic-proto-three/">
-        Go to Prototype 1 - Parent Focus with Chemistry
+        Go to Prototype 3 - Parent Focus with Chemistry
       </a>
       <br />
       <a href="https://catherinemei.github.io/benthic-proto-four/">
-        Go to Prototype 2 - Flat with Chemistry
+        Go to Prototype 4 - Flat with Chemistry
       </a>
 
       <h1>Commands</h1>
