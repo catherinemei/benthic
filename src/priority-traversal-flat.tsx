@@ -332,7 +332,7 @@ export function HypergraphNodeComponentKeyboardOnly(
         tabindex="0"
       >
         <span style={{ "font-weight": "bold" }} aria-hidden={true}>
-          Parents{" "}
+          Belongs to{" "}
         </span>
         <For
           each={sortedParents()}
@@ -370,7 +370,7 @@ export function HypergraphNodeComponentKeyboardOnly(
         tabindex="0"
       >
         <span style={{ "font-weight": "bold" }} aria-hidden={true}>
-          Children{" "}
+          Contains{" "}
         </span>
         <For
           each={sortedChildren()}
