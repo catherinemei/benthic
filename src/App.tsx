@@ -20,6 +20,10 @@ const App: Component = () => {
       <a href="https://catherinemei.github.io/benthic-proto-four/">
         Go to Prototype 4 - Flat with Chemistry
       </a>
+      <br />
+      <a href="https://catherinemei.github.io/benthic-proto-five/">
+        Go to Prototype 5 - New Parent Focus
+      </a>
 
       <h1>Commands</h1>
       <ul>
