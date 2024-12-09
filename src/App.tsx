@@ -22,7 +22,14 @@ const App: Component = () => {
       </a>
       <br />
       <a href="https://catherinemei.github.io/benthic-proto-five/">
-        Go to Prototype 5 - New Parent Focus
+        Go to Prototype 5 - New Parent Focus with explicit parent node selection
+        menu (via pressing G)
+      </a>
+
+      <br />
+      <a href="https://catherinemei.github.io/benthic-proto-six/">
+        Go to Prototype 6 - New Parent Focus with integrated parent node
+        selection (no pressing G or P to jump out to selection menu)
       </a>
 
       <h1>Commands</h1>
