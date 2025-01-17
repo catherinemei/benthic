@@ -32,6 +32,12 @@ const App: Component = () => {
         selection (no pressing G or P to jump out to selection menu)
       </a>
 
+      <br />
+      <a href="https://catherinemei.github.io/benthic-proto-seven/">
+        Go to Prototype 7 - New Parent Focus where each node only accesses 2
+        outgoing nodes (contains and belongs to)
+      </a>
+
       <h1>Commands</h1>
       <ul>
         <li>Press Left/Right/Up/Down arrows to traverse nodes in same layer</li>
