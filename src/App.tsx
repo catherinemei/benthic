@@ -38,6 +38,27 @@ const App: Component = () => {
         outgoing nodes (contains and belongs to)
       </a>
 
+      <br />
+      <a href="https://catherinemei.github.io/benthic-1/">
+        User Study 1 - small test example to help users become familiar with
+        system
+      </a>
+
+      <br />
+      <a href="https://catherinemei.github.io/benthic-2/">
+        User Study 2 - pulley example
+      </a>
+
+      <br />
+      <a href="https://catherinemei.github.io/benthic-3/">
+        User Study 3 - Franconeri bar chart (hides improbable conclusion)
+      </a>
+
+      <br />
+      <a href="https://catherinemei.github.io/benthic-4/">
+        User Study 4 - Franconeri bar chart (shows improbable conclusion)
+      </a>
+
       <h1>Commands</h1>
       <ul>
         <li>Press Left/Right/Up/Down arrows to traverse nodes in same layer</li>
