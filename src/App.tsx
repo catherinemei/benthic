@@ -46,7 +46,7 @@ const App: Component = () => {
 
       <br />
       <a href="https://catherinemei.github.io/benthic-2/">
-        User Study 2 - pulley example
+        User Study 2 - Easy pulley example
       </a>
 
       <br />
@@ -57,6 +57,11 @@ const App: Component = () => {
       <br />
       <a href="https://catherinemei.github.io/benthic-4/">
         User Study 4 - Franconeri bar chart (shows improbable conclusion)
+      </a>
+
+      <br />
+      <a href="https://catherinemei.github.io/benthic-5/">
+        User Study 5 - Medium pulley example
       </a>
 
       <h1>Commands</h1>
